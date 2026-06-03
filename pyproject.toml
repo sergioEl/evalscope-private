@@ -9,7 +9,7 @@ authors = [
   {email = "contact@modelscope.cn"}
 ]
 keywords = ["python", "llm", "evaluation"]
-requires-python = ">=3.10"
+requires-python = ">=3.12, <3.13"
 classifiers = [
   "Development Status :: 4 - Beta",
   "Operating System :: OS Independent",
@@ -17,6 +17,12 @@ classifiers = [
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+]
+
+[tool.uv]
+environments = ["sys_platform == 'darwin'"]
+override-dependencies = [
+    "tenacity>=9.1.2",
 ]
 
 [project.urls]
@@ -72,8 +78,6 @@ refcoco          = {file = ["evalscope/benchmarks/refcoco/requirements.txt"]}
 swe_bench        = {file = ["evalscope/benchmarks/swe_bench/requirements.txt"]}
 wmt              = {file = ["evalscope/benchmarks/wmt/requirements.txt"]}
 torgo            = {file = ["evalscope/benchmarks/torgo/requirements.txt"]}
-terminal_bench   = {file = ["evalscope/benchmarks/terminal_bench/requirements.txt"]}
-bfcl             = {file = ["evalscope/benchmarks/bfcl/requirements.txt"]}
 all = {file = [
   "requirements/opencompass.txt",
   "requirements/vlmeval.txt",
