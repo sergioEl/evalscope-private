@@ -6,7 +6,7 @@ from evalscope.utils.import_utils import _LazyModule
 if TYPE_CHECKING:
     from .sampler import DatasetEntry, StratifiedSampler, UniformSampler, WeightedSampler
     from .schema import CollectionSchema, DatasetInfo
-
+    from .pruning_samplers import DiscriminabilitySampler, ImageStressSampler
 else:
     _import_structure = {
         'sampler': ['StratifiedSampler', 'UniformSampler', 'WeightedSampler', 'DatasetEntry'],
@@ -14,10 +14,12 @@ else:
             'CollectionSchema',
             'DatasetInfo',
         ],
+        'pruning_samplers': [
+            'DiscriminabilitySampler',
+            'ImageStressSampler',
+        ],
     }
-
     import sys
-
     sys.modules[__name__] = _LazyModule(
         __name__,
         globals()['__file__'],
