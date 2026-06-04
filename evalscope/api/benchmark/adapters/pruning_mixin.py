@@ -42,6 +42,16 @@ class PruningAdapterMixin:
         )
 
     def load_dataset(self) -> DatasetDict:
+
+        # Temporary debug print
+        print(f"\n--- DEBUG MIXIN ---")
+        print(f"Strategy received: {self.pruning_strategy}")
+        print(f"Ratio received: {self.prune_ratio}")
+        print(f"Data path received: {self.pruner_data_path}")
+        print(f"Results dir received: {self.pruner_results_dir}")
+        print(f"MMMU dir received: {self.pruner_mmmu_dir}")
+        print(f"-------------------\n")
+
         # 1. Load the full in-memory dataset via the parent adapter
         dataset_dict = super().load_dataset()
 
@@ -55,12 +65,7 @@ class PruningAdapterMixin:
         
         kept_indices = set()
 
-        # Temporary debug print
-        print(f"\n--- DEBUG MIXIN ---")
-        print(f"Strategy received: {self.pruning_strategy}")
-        print(f"Ratio received: {self.prune_ratio}")
-        print(f"Target size calculated: {target_size}")
-        print(f"-------------------\n")
+        
 
         # 4. Execute the appropriate disk-based sampler
         if self.pruning_strategy == "discriminability":
