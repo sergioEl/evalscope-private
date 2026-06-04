@@ -23,6 +23,11 @@
 
 > ⭐ If you like this project, please click the "Star" button in the upper right corner to support us. Your support is our motivation to move forward!
 
+> **🏆 AI Model Quality Challenge - Task 2**
+> This fork contains upstream-quality pruning extensions (Part A & B).  
+> It was developed and tested against `evalscope` commit SHA: `c14dbaf94e9129f7054ad4a184c2ff0cae2e6a5d`
+
+
 ## 📝 Introduction
 
 EvalScope is a one-stop LLM evaluation framework built by the [ModelScope Community](https://modelscope.cn/). Just one command to start — it supports model capability evaluation, inference performance stress testing, and result visualization.
