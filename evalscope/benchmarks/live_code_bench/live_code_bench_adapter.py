@@ -231,6 +231,7 @@ class LiveCodeBenchAdapter(DefaultDataAdapter):
         name='live_code_bench_pruned',
         pretty_name='Live-Code-Bench (Pruned)',
         tags=[Tags.CODING],
+        description="Pruned version of LiveCodeBench for efficient evaluation.",
         # COPY THESE EXACTLY from the original BenchmarkMeta above it:
         dataset_id='evalscope/livecodebench_code_generation_lite_parquet',
         subset_list=['release_latest', 'release_v1', 'release_v2', 'release_v3', 'release_v4', 'release_v5', 'release_v6', 'v1', 'v1_v2', 'v1_v3', 'v1_v4', 'v1_v5', 'v1_v6', 'v2', 'v2_v3', 'v2_v4', 'v2_v5', 'v2_v6', 'v3', 'v3_v4', 'v3_v5', 'v3_v6', 'v4', 'v4_v5', 'v4_v6', 'v5', 'v5_v6', 'v6'],
@@ -240,8 +241,31 @@ class LiveCodeBenchAdapter(DefaultDataAdapter):
         prompt_template='### Question:\n{question_content}\n\n{format_prompt} ### Answer: (use the provided format with backticks)\n\n',
         review_timeout=6,
         extra_params={
+            'start_date': {
+                'type': 'str | null',
+                'description': 'Filter problems starting from this date (YYYY-MM-DD). Null keeps all.',
+                'value': None
+            },
+            'end_date': {
+                'type': 'str | null',
+                'description': 'Filter problems up to this date (YYYY-MM-DD). Null keeps all.',
+                'value': None
+            },
+            'debug': {
+                'type': 'bool',
+                'description': 'Enable verbose debug logging and bypass certain safety checks.',
+                'value': False
+            },
             'dataset_args': {'type': 'dict', 'description': 'Pruning config', 'value': {}}
-        }
+        },
+        # CRITICAL: Retain the sandbox environment config for code execution
+        sandbox_config={
+            'image': 'python:3.11-slim',
+            'tools_config': {
+                'shell_executor': {},
+                'python_executor': {}
+            }
+        },
     )
 )
 # Note the MRO: Mixin MUST come first to intercept load_dataset, then the parent class

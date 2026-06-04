@@ -12,14 +12,16 @@ class PruningAdapterMixin:
     to the in-memory DatasetDict.
     """
     def __init__(self, **kwargs):
-        # 1. Initialize parent DataAdapter (MRO guarantees this hits the correct base class)
+        # 1. Initialize parent DataAdapter to populate self.task_config and self.name
         super().__init__(**kwargs)
         
-        # 2. Extract dataset_args safely
-        raw_args = kwargs.get('dataset_args', {})
-        dataset_name = kwargs.get('dataset_name', getattr(self, 'name', ''))
+        # 2. Extract dataset_args directly from task_config, NOT kwargs
+        task_config = kwargs.get('task_config')
+        raw_args = getattr(task_config, 'dataset_args', {}) if task_config else {}
         
-        # Handle evalscope's nested vs flat CLI dictionary formats
+        dataset_name = getattr(self, 'name', '')
+        
+        # 3. Handle evalscope's nested vs flat CLI dictionary formats
         if dataset_name in raw_args and isinstance(raw_args[dataset_name], dict):
             self.prune_config = raw_args[dataset_name]
         else:
@@ -28,7 +30,7 @@ class PruningAdapterMixin:
         self.pruning_strategy = self.prune_config.get('pruning_strategy')
         self.prune_ratio = float(self.prune_config.get('prune_ratio', 1.0))
         
-        # 3. Resolve paths (CLI overrides > Class defaults > None)
+        # 4. Resolve paths (CLI overrides > Class defaults > None)
         self.pruner_data_path = self.prune_config.get(
             'data_path', getattr(self, 'default_pruner_data_path', None)
         )
@@ -52,6 +54,13 @@ class PruningAdapterMixin:
         target_size = int(total_samples * self.prune_ratio)
         
         kept_indices = set()
+
+        # Temporary debug print
+        print(f"\n--- DEBUG MIXIN ---")
+        print(f"Strategy received: {self.pruning_strategy}")
+        print(f"Ratio received: {self.prune_ratio}")
+        print(f"Target size calculated: {target_size}")
+        print(f"-------------------\n")
 
         # 4. Execute the appropriate disk-based sampler
         if self.pruning_strategy == "discriminability":

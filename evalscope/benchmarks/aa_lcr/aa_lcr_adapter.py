@@ -238,13 +238,29 @@ class AALCRAdapter(DefaultDataAdapter):
         return score
 
 
-# @register_benchmark(
-#     BenchmarkMeta(
-#         name='aa_lcr_pruned',
-#         # ... COPY all meta fields from the base AA-LCR BenchmarkMeta ...
-#         extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
-#     )
-# )
-# class PrunedAALCRAdapter(PruningAdapterMixin, AALCRAdapter): # Replace AALCRAdapter with actual class name
-#     default_pruner_data_path = "Evals/Part 1/predictions"
-#     default_pruner_results_dir = "Evals/Part 1/reviews"
+@register_benchmark(
+    BenchmarkMeta(
+        name='aa_lcr_pruned',
+        pretty_name='AA-LCR (Pruned)',
+        tags=[Tags.KNOWLEDGE, Tags.REASONING, Tags.LONG_CONTEXT],
+        # Copied from the base AA-LCR BenchmarkMeta:
+        dataset_id='evalscope/AA-LCR',
+        metric_list=['acc'],
+        few_shot_num=0,
+        train_split=None,
+        eval_split='test',
+        prompt_template=PROMPT_TEMPLATE,
+        # Merged extra_params: original text_dir + the required dataset_args for pruning
+        extra_params={
+            'text_dir': {
+                'type': 'str | null',
+                'description': 'Local directory containing extracted AA-LCR text files; if null will auto-download & extract.',
+                'value': None
+            },
+            'dataset_args': {'type': 'dict', 'value': {}}
+        }
+    )
+)
+class PrunedAALCRAdapter(PruningAdapterMixin, AALCRAdapter): # Replace AALCRAdapter with actual class name
+    default_pruner_data_path = "Evals/Part 1/predictions"
+    default_pruner_results_dir = "Evals/Part 1/reviews"
