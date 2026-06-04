@@ -238,13 +238,13 @@ class AALCRAdapter(DefaultDataAdapter):
         return score
 
 
-@register_benchmark(
-    BenchmarkMeta(
-        name='aa_lcr_pruned',
-        # ... COPY all meta fields from the base AA-LCR BenchmarkMeta ...
-        extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
-    )
-)
-class PrunedAALCRAdapter(PruningAdapterMixin, AALCRAdapter): # Replace AALCRAdapter with actual class name
-    default_pruner_data_path = "Evals/Part 1/predictions"
-    default_pruner_results_dir = "Evals/Part 1/reviews"
+# @register_benchmark(
+#     BenchmarkMeta(
+#         name='aa_lcr_pruned',
+#         # ... COPY all meta fields from the base AA-LCR BenchmarkMeta ...
+#         extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
+#     )
+# )
+# class PrunedAALCRAdapter(PruningAdapterMixin, AALCRAdapter): # Replace AALCRAdapter with actual class name
+#     default_pruner_data_path = "Evals/Part 1/predictions"
+#     default_pruner_results_dir = "Evals/Part 1/reviews"

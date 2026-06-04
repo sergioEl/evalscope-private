@@ -214,13 +214,13 @@ class MMMUAdapter(VisionLanguageAdapter):
         return content_list, answers_list
 
 
-@register_benchmark(
-    BenchmarkMeta(
-        name='mmmu_pruned',
-        # ... COPY all meta fields from the base MMMU BenchmarkMeta ...
-        extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
-    )
-)
-class PrunedMMMUAdapter(PruningAdapterMixin, MMMUAdapter): # Replace MMMUAdapter with actual class name
-    # MMMU uses a different config key
-    default_pruner_mmmu_dir = "Evals/MMMU"
+# @register_benchmark(
+#     BenchmarkMeta(
+#         name='mmmu_pruned',
+#         # ... COPY all meta fields from the base MMMU BenchmarkMeta ...
+#         extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
+#     )
+# )
+# class PrunedMMMUAdapter(PruningAdapterMixin, MMMUAdapter): # Replace MMMUAdapter with actual class name
+#     # MMMU uses a different config key
+#     default_pruner_mmmu_dir = "Evals/MMMU"
