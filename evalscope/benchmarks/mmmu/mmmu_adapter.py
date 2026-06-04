@@ -3,6 +3,7 @@ import re
 from typing import Any, Dict, List
 
 from evalscope.api.benchmark import BenchmarkMeta, VisionLanguageAdapter
+from evalscope.api.benchmark.adapters.pruning_mixin import PruningAdapterMixin
 from evalscope.api.dataset import Sample
 from evalscope.api.evaluator import TaskState
 from evalscope.api.messages import ChatMessageUser, Content
@@ -211,3 +212,15 @@ class MMMUAdapter(VisionLanguageAdapter):
             content_list = self._parse_text_with_images(full_text, image_map)
 
         return content_list, answers_list
+
+
+@register_benchmark(
+    BenchmarkMeta(
+        name='mmmu_pruned',
+        # ... COPY all meta fields from the base MMMU BenchmarkMeta ...
+        extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
+    )
+)
+class PrunedMMMUAdapter(PruningAdapterMixin, MMMUAdapter): # Replace MMMUAdapter with actual class name
+    # MMMU uses a different config key
+    default_pruner_mmmu_dir = "Evals/MMMU"

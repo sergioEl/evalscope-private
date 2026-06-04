@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any, Dict
 
 from evalscope.api.benchmark import BenchmarkMeta, DefaultDataAdapter
+from evalscope.api.benchmark.adapters.pruning_mixin import PruningAdapterMixin
 from evalscope.api.dataset import Sample
 from evalscope.api.evaluator import TaskState
 from evalscope.api.messages import ChatMessageUser
@@ -235,3 +236,15 @@ class AALCRAdapter(DefaultDataAdapter):
         }
         score.main_score_name = 'acc'
         return score
+
+
+@register_benchmark(
+    BenchmarkMeta(
+        name='aa_lcr_pruned',
+        # ... COPY all meta fields from the base AA-LCR BenchmarkMeta ...
+        extra_params={'dataset_args': {'type': 'dict', 'value': {}}}
+    )
+)
+class PrunedAALCRAdapter(PruningAdapterMixin, AALCRAdapter): # Replace AALCRAdapter with actual class name
+    default_pruner_data_path = "Evals/Part 1/predictions"
+    default_pruner_results_dir = "Evals/Part 1/reviews"

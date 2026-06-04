@@ -2,6 +2,7 @@
 from typing import Any, Dict
 
 from evalscope.api.benchmark import BenchmarkMeta, DefaultDataAdapter
+from evalscope.api.benchmark.adapters.pruning_mixin import PruningAdapterMixin
 from evalscope.api.dataset import Sample
 from evalscope.api.evaluator import TaskState
 from evalscope.api.messages.chat_message import ChatMessageUser
@@ -222,3 +223,29 @@ class LiveCodeBenchAdapter(DefaultDataAdapter):
 
         score.main_score_name = 'acc'
         return score
+
+
+
+@register_benchmark(
+    BenchmarkMeta(
+        name='live_code_bench_pruned',
+        pretty_name='Live-Code-Bench (Pruned)',
+        tags=[Tags.CODING],
+        # COPY THESE EXACTLY from the original BenchmarkMeta above it:
+        dataset_id='evalscope/livecodebench_code_generation_lite_parquet',
+        subset_list=['release_latest', 'release_v1', 'release_v2', 'release_v3', 'release_v4', 'release_v5', 'release_v6', 'v1', 'v1_v2', 'v1_v3', 'v1_v4', 'v1_v5', 'v1_v6', 'v2', 'v2_v3', 'v2_v4', 'v2_v5', 'v2_v6', 'v3', 'v3_v4', 'v3_v5', 'v3_v6', 'v4', 'v4_v5', 'v4_v6', 'v5', 'v5_v6', 'v6'],
+        metric_list=['acc'],
+        aggregation='mean_and_pass_at_k',
+        eval_split='test',
+        prompt_template='### Question:\n{question_content}\n\n{format_prompt} ### Answer: (use the provided format with backticks)\n\n',
+        review_timeout=6,
+        extra_params={
+            'dataset_args': {'type': 'dict', 'description': 'Pruning config', 'value': {}}
+        }
+    )
+)
+# Note the MRO: Mixin MUST come first to intercept load_dataset, then the parent class
+class PrunedLiveCodeBenchAdapter(PruningAdapterMixin, LiveCodeBenchAdapter):
+    # Set the fallback locations so the strict CLI Run Contract works automatically
+    default_pruner_data_path = "Evals/Part 1/predictions"
+    default_pruner_results_dir = "Evals/Part 1/reviews"
